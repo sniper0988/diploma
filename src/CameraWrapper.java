@@ -121,7 +121,10 @@ public class CameraWrapper {
 
     //метод-коллектор. собирает все настройки и уровни перед выдачей в окно приложения
     public BufferedImage cameraSwitchCollector(Mat mat){
-        if(isBlackWhite) mat = ColorsComponents.blackWhiteImage(mat,valueBlackWhite);
+        if(isBlackWhite) {
+            mat = ColorsComponents.blackWhiteImage(mat,valueBlackWhite);
+            isBrightness = false;
+        }
         if (isBrightness) mat = ColorsComponents.brightnessLevel(mat, valueBrightness);
 
         return CvUtils.MatToBufferedImage(mat);

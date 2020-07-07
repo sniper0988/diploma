@@ -86,14 +86,15 @@ public class GUIFrame extends JFrame {
                         //ImageIcon imageIconLabel = new ImageIcon(img);
 
                         // получение черно-белого изображения
-                        //ImageIcon imageIconLabel = new ImageIcon(CvUtils.MatToBufferedImage(ColorsComponents.blackWhiteImage(frame, 0)));
+                        //ImageIcon imageIconLabel = new ImageIcon(CvUtils.MatToBufferedImage(ColorsComponents.blackWhiteImage(frame, 100)));
 
                         // изменение яркости
                         //ImageIcon imageIconLabel = new ImageIcon(CvUtils.MatToBufferedImage(ColorsComponents.brightnessLevel(frame)));
 
                         //ImageIcon imageIconLabel = new ImageIcon(windowsSwing.FindFace.faceSquare(frame));
 
-                        captureCamera.setBlackWhite(blackWhiteCheckBox.isEnabled());
+
+                        captureCamera.setBlackWhite(blackWhiteCheckBox.isSelected());
                         captureCamera.setValueBrightness(brightnessValueSlider.getValue());
                         captureCamera.setValueBlackWhite(BlackWhiteValueSlider.getValue());
                         ImageIcon imageIconLabel = new ImageIcon(captureCamera.cameraSwitchCollector(frame));
