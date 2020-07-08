@@ -1,6 +1,5 @@
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import windowsSwing.CvUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -115,7 +114,7 @@ public class GUIFrame extends JFrame {
                         // изменение яркости
                         //ImageIcon imageIconLabel = new ImageIcon(CvUtils.MatToBufferedImage(ColorsComponents.brightnessLevel(frame)));
 
-                        //ImageIcon imageIconLabel = new ImageIcon(windowsSwing.FindFace.faceSquare(frame));
+                        //ImageIcon imageIconLabel = new ImageIcon(FindFace.faceSquare(frame));
 
 
                         captureCamera.setFaceFinder(faceCheckBox.isSelected());

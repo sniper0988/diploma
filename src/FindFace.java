@@ -1,5 +1,3 @@
-package windowsSwing;
-
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Point;
