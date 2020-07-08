@@ -1,6 +1,7 @@
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.awt.image.BufferedImage;
@@ -47,6 +48,20 @@ abstract class ColorsComponents {
         Imgproc.cvtColor(imgHSV, imgBGR, Imgproc.COLOR_HSV2BGR);
 
         return imgBGR;
+    }
+
+    public static Mat grayShades(Mat mat) {
+
+        Mat m2 = new Mat();
+        Imgproc.cvtColor(mat, m2, Imgproc.COLOR_BGR2GRAY);
+
+        return m2;
+    }
+
+    public static Mat blur(Mat mat, int size) {
+        Mat m2 = new Mat();
+        Imgproc.blur(mat, m2, new Size(size, size));
+        return m2;
     }
 
 

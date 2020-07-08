@@ -81,9 +81,9 @@ public class Camera {
                         // изменение яркости
                          //ImageIcon imageIcon = new ImageIcon(windowsSwing.MainSwing.ColorsComponents.brightnessLevel(frame));
 
-                        ImageIcon imageIcon = new ImageIcon(FindFace.faceSquare(frame));
+                        //ImageIcon imageIcon = new ImageIcon(FindFace.faceSquare(frame));
 
-                        label.setIcon(imageIcon);
+                        //label.setIcon(imageIcon);
                         label.repaint();
                         window.pack();
                     }

@@ -1,6 +1,7 @@
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
+import windowsSwing.FindFace;
 
 import java.awt.image.BufferedImage;
 
@@ -13,10 +14,11 @@ public class CameraWrapper {
     private boolean isRun = true;  // состояние камеры
 
     //фильтры-переключатели
-    private boolean isBlackWhite = false;
     private boolean isBrightness = true;
-    private boolean isBlur = false;
+    private boolean isBlackWhite = false;
+    private boolean isBlur = true;
     private boolean isContrast = false;
+    private boolean faceFinder = false;
 
     //уровни фильтров
     private int valueBlackWhite = 0;
@@ -113,6 +115,24 @@ public class CameraWrapper {
         this.valueBrightness = valueBrightness;
     }
 
+    //возвращает уровень размытия
+    public int getValueBlur() {
+        return valueBlur;
+    }
+
+    public boolean isFaceFinder() {
+        return faceFinder;
+    }
+
+    public void setFaceFinder(boolean faceFinder) {
+        this.faceFinder = faceFinder;
+    }
+
+    //устанавливает уровень размытия
+    public void setValueBlur(int valueBlur) {
+        this.valueBlur = valueBlur;
+    }
+
     //метод закрывает камеру
     public void closeCamera() {
         this.camera.release();
@@ -121,11 +141,30 @@ public class CameraWrapper {
 
     //метод-коллектор. собирает все настройки и уровни перед выдачей в окно приложения
     public BufferedImage cameraSwitchCollector(Mat mat){
-        if(isBlackWhite) {
+/*        if(isBlackWhite) {
             mat = ColorsComponents.blackWhiteImage(mat,valueBlackWhite);
             isBrightness = false;
+        }*/
+        //изображение оттенки серого
+        if (isBlackWhite) {
+            // настройка яркости изображения невозможна по причине того, яркость
+            // возможно изменять у матрицы цветного изображения
+            isBrightness = false;
+            mat = ColorsComponents.grayShades(mat);
+
         }
+        //яркость
         if (isBrightness) mat = ColorsComponents.brightnessLevel(mat, valueBrightness);
+
+        //размытие
+        if(isBlur) mat = ColorsComponents.blur(mat, valueBlur);
+
+        //лицо
+        if(faceFinder){
+            FindFace.faceSquare(mat);
+        }
+
+        isBrightness = true;
 
         return CvUtils.MatToBufferedImage(mat);
     }

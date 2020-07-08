@@ -2,18 +2,25 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import windowsSwing.CvUtils;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class GUIFrame extends JFrame {
     private JPanel rootPanel;
-    private JButton closeCameraButton;
+    private JButton clickCameraButton;
     private JSlider brightnessValueSlider;
     private JLabel label;
-    private JSlider BlackWhiteValueSlider;
     private JCheckBox blackWhiteCheckBox;
+    private JSlider valueBlurSlider;
+    private JCheckBox faceCheckBox;
+
 
     public static boolean isEnd = false;    //работа завершена?
 
@@ -65,6 +72,8 @@ public class GUIFrame extends JFrame {
         }
 
 
+
+
         try {
             //установка размера кадра
             captureCamera.setFrameWidth(640);
@@ -72,9 +81,24 @@ public class GUIFrame extends JFrame {
 
 
             //ЧТЕНИЕ КАДРОВ
-
             Mat frame = new Mat();
             BufferedImage img = null;
+
+            //прослушивание кнопки "Щелкнуть"
+            clickCameraButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+
+                    BufferedImage saveImage= captureCamera.cameraSwitchCollector(frame);
+                    File outputFile = new File("sources\\photo.jpg");
+                    try {
+                        ImageIO.write(saveImage, "jpg", outputFile);
+                    } catch (IOException ioException) {
+                        System.out.println("Не удалось сохраниь изображение");
+                    }
+                    System.out.println("Click");
+                }
+            });
+
 
 
             while (captureCamera.isRun()) {         //проверка, запущена ли камера
@@ -94,9 +118,11 @@ public class GUIFrame extends JFrame {
                         //ImageIcon imageIconLabel = new ImageIcon(windowsSwing.FindFace.faceSquare(frame));
 
 
+                        captureCamera.setFaceFinder(faceCheckBox.isSelected());
                         captureCamera.setBlackWhite(blackWhiteCheckBox.isSelected());
                         captureCamera.setValueBrightness(brightnessValueSlider.getValue());
-                        captureCamera.setValueBlackWhite(BlackWhiteValueSlider.getValue());
+                        //captureCamera.setValueBlackWhite(BlackWhiteValueSlider.getValue())
+                        captureCamera.setValueBlur(valueBlurSlider.getValue());
                         ImageIcon imageIconLabel = new ImageIcon(captureCamera.cameraSwitchCollector(frame));
 
                         label.setIcon(imageIconLabel);

@@ -10,7 +10,7 @@ import org.opencv.objdetect.CascadeClassifier;
 import java.awt.image.BufferedImage;
 
 public abstract class FindFace {
-    public static BufferedImage faceSquare(Mat img) {
+    public static Mat faceSquare(Mat img) {
         if (img.empty()) {
             System.out.println("Не удалось загрузить изображение");
             return null;
@@ -32,6 +32,6 @@ public abstract class FindFace {
                     new Point(r.x + r.width, r.y + r.height),
                     CvUtils.COLOR_WHITE, 2);
         }
-        return CvUtils.MatToBufferedImage(img);
+        return img;
     }
 }

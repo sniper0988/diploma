@@ -1,8 +1,5 @@
 import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
+import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.Map;
@@ -13,7 +10,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        //создание точки с переданными координатами
+/*        //создание точки с переданными координатами
         //без передачи координат создается точка (0;0)
         Point p1 = new Point(10.0, 20.0);
         Point p2 = new Point();
@@ -29,5 +26,8 @@ public class Main {
         System.out.println(p1.x + " " + p1.y);  // 2.0 3.0
 
         Mat img = new Mat(300, 300, CvType.CV_8UC3, CvUtils.COLOR_WHITE);
+        */
+
+
     }
 }
