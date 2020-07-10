@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class GUIFrame extends JFrame {
+public class Main extends JFrame {
     private JPanel rootPanel;
     private JButton clickCameraButton;
     private JSlider brightnessValueSlider;
@@ -19,9 +19,10 @@ public class GUIFrame extends JFrame {
     private JCheckBox blackWhiteCheckBox;
     private JSlider valueBlurSlider;
     private JCheckBox faceCheckBox;
-
-
-    public static boolean isEnd = false;    //работа завершена?
+    private JLabel rChannel;
+    private JLabel gChannel;
+    private JLabel bChannel;
+    private JCheckBox splitColorsCheckBox;
 
     //подключение библиотеки
     static {
@@ -29,7 +30,7 @@ public class GUIFrame extends JFrame {
     }
 
 
-    public GUIFrame() {
+    public Main() {
         //устанавливает содержимое окна
         setContentPane(rootPanel);
         //устанавливает видимость окна
@@ -43,8 +44,7 @@ public class GUIFrame extends JFrame {
         //устанавливает действие при закрытии
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        //        Подключение к камере
-        //VideoCapture camera = new VideoCapture(0);
+        //Подключение к камере
         CameraWrapper captureCamera = new CameraWrapper(0);
 
         //добавление прослушивания окна
@@ -54,58 +54,59 @@ public class GUIFrame extends JFrame {
             public void windowClosing(WindowEvent e) {
                 //параметр работы камеры //false
                 captureCamera.closeCamera();
-                if (isEnd) {
-                    System.exit(0);
-                }
             }
         });
 
-
-        // if (!camera.isOpened())
         if (!captureCamera.getCamera().isOpened()) {
             this.setTitle("Не удалось подключиться к камере");
             //если камера не запустилась, то флаг камеры false
             captureCamera.setRun(false);
-            isEnd = true;
             return;
         }
 
-
-
-
         try {
             //установка размера кадра
-            captureCamera.setFrameWidth(640);
-            captureCamera.setFrameHeight(480);
+            captureCamera.setFrameWidth(480);
+            captureCamera.setFrameHeight(360);
 
 
             //ЧТЕНИЕ КАДРОВ
             Mat frame = new Mat();
-            BufferedImage img = null;
+            //BufferedImage img = null;
 
             //прослушивание кнопки "Щелкнуть"
             clickCameraButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-
-                    BufferedImage saveImage= captureCamera.cameraSwitchCollector(frame);
-                    File outputFile = new File("sources\\photo.jpg");
-                    try {
-                        ImageIO.write(saveImage, "jpg", outputFile);
-                    } catch (IOException ioException) {
-                        System.out.println("Не удалось сохраниь изображение");
+                    //создать изображение
+                    BufferedImage saveImage = captureCamera.cameraCollector(frame);
+                    int num = 0;
+                    while (true) {
+                        //создать файл
+                        File outputFile = new File("sources\\photo" + num + ".jpg");
+                        if (!outputFile.exists()) {   //если файла нет, то создать его и сохранить изображение и разорвать цикл
+                            try {
+                                ImageIO.write(saveImage, "jpg", outputFile);
+                            } catch (IOException ioException) {
+                                System.out.println("Не удалось сохраниь изображение");
+                            }
+                            System.out.println("Click");
+                            break;
+                        } else {  //если есть, то изменить имя файла num++ и сначала
+                            num++;
+                            continue;
+                        }
                     }
-                    System.out.println("Click");
                 }
             });
 
 
-
             while (captureCamera.isRun()) {         //проверка, запущена ли камера
                 if (captureCamera.getCamera().read(frame)) {
-                    img = CvUtils.MatToBufferedImage(frame);
-
-                    if (img != null) {
-                        // вывод полученного изображения с камеры
+                    //необходимо конвертировать для проверки
+                    //img = CvUtils.MatToBufferedImage(frame);
+                    //
+                    if (frame != null) {    //проверка изображения на !null
+                       /* // вывод полученного изображения с камеры
                         //ImageIcon imageIconLabel = new ImageIcon(img);
 
                         // получение черно-белого изображения
@@ -115,14 +116,51 @@ public class GUIFrame extends JFrame {
                         //ImageIcon imageIconLabel = new ImageIcon(CvUtils.MatToBufferedImage(ColorsComponents.brightnessLevel(frame)));
 
                         //ImageIcon imageIconLabel = new ImageIcon(FindFace.faceSquare(frame));
+*/
 
-
+                        //включает используемые фильтры в зависимости от состояния чекбокса\слайдера
                         captureCamera.setFaceFinder(faceCheckBox.isSelected());
                         captureCamera.setBlackWhite(blackWhiteCheckBox.isSelected());
                         captureCamera.setValueBrightness(brightnessValueSlider.getValue());
-                        //captureCamera.setValueBlackWhite(BlackWhiteValueSlider.getValue())
                         captureCamera.setValueBlur(valueBlurSlider.getValue());
-                        ImageIcon imageIconLabel = new ImageIcon(captureCamera.cameraSwitchCollector(frame));
+
+                        //устанавливается картинка, которая предварительно собирается в методе cameraCollector
+                        ImageIcon imageIconLabel = new ImageIcon(captureCamera.cameraCollector(frame));
+
+
+                        if (splitColorsCheckBox.isSelected()) {
+
+                            rChannel.setVisible(true);
+                            gChannel.setVisible(true);
+                            bChannel.setVisible(true);
+
+                            ImageIcon imageIconRed = new ImageIcon(
+                                    CvUtils.MatToBufferedImage(
+                                            ColorsComponents.splitImage(frame).get(0)));
+
+                            ImageIcon imageIconGreen = new ImageIcon(
+                                    CvUtils.MatToBufferedImage(
+                                            ColorsComponents.splitImage(frame).get(1)));
+
+                            ImageIcon imageIconBlue = new ImageIcon(
+                                    CvUtils.MatToBufferedImage(
+                                            ColorsComponents.splitImage(frame).get(2)));
+
+                            rChannel.setIcon(imageIconRed);
+                            gChannel.setIcon(imageIconGreen);
+                            bChannel.setIcon(imageIconBlue);
+
+                            rChannel.repaint();
+                            gChannel.repaint();
+                            bChannel.repaint();
+                        } else {
+                            rChannel.setVisible(false);
+                            gChannel.setVisible(false);
+                            bChannel.setVisible(false);
+                            captureCamera.setFrameWidth(640);
+                            captureCamera.setFrameHeight(480);
+
+                        }
 
                         label.setIcon(imageIconLabel);
                         label.repaint();
@@ -140,19 +178,16 @@ public class GUIFrame extends JFrame {
                 }
             }
         } finally {
-
             captureCamera.closeCamera();
-            isEnd = true;
+            captureCamera.setRun(false);
         }
 
     }
 
 
     public static void main(String[] args) {
-        new GUIFrame();
+        new Main();
     }
 
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
-    }
+
 }

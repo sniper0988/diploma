@@ -211,26 +211,25 @@ public class CvUtils {
     public static final Scalar COLOR_RED = colorRGB(255, 0, 0);
     public static final Scalar COLOR_GRAY = colorRGB(128, 128, 128);
 
-    public static Scalar colorRGB(double red, double green, double blue){
+    public static Scalar colorRGB(double red, double green, double blue) {
         return new Scalar(blue, green, red);
     }
 
-    public static Scalar colorRGB(java.awt.Color c){
+    public static Scalar colorRGB(java.awt.Color c) {
         return new Scalar(c.getBlue(), c.getGreen(), c.getRed());
     }
 
-    public static Scalar colorRGBA(double red, double green, double blue, double alpha){
+    public static Scalar colorRGBA(double red, double green, double blue, double alpha) {
         return new Scalar(blue, green, red, alpha);
     }
 
-    public static Scalar colorRGBA(java.awt.Color c){
+    public static Scalar colorRGBA(java.awt.Color c) {
         return new Scalar(
                 c.getBlue(),
                 c.getGreen(),
                 c.getRed(),
                 c.getAlpha());
     }
-
 
 
 }

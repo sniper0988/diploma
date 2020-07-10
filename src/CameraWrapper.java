@@ -8,8 +8,8 @@ import java.awt.image.BufferedImage;
 public class CameraWrapper {
 
     private VideoCapture camera;    // камера
-    private int frameWidth = 640;   // ширина кадра
-    private int frameHeight = 480;  // высота кадра
+    private int frameWidth = 480;   // ширина кадра
+    private int frameHeight = 360;  // высота кадра
     private boolean isRun = true;  // состояние камеры
 
     //фильтры-переключатели
@@ -139,7 +139,7 @@ public class CameraWrapper {
     }
 
     //метод-коллектор. собирает все настройки и уровни перед выдачей в окно приложения
-    public BufferedImage cameraSwitchCollector(Mat mat){
+    public BufferedImage cameraCollector(Mat mat) {
 /*        if(isBlackWhite) {
             mat = ColorsComponents.blackWhiteImage(mat,valueBlackWhite);
             isBrightness = false;
@@ -156,11 +156,11 @@ public class CameraWrapper {
         if (isBrightness) mat = ColorsComponents.brightnessLevel(mat, valueBrightness);
 
         //размытие
-        if(isBlur) mat = ColorsComponents.blur(mat, valueBlur);
+        if (isBlur) mat = ColorsComponents.blur(mat, valueBlur);
 
         //лицо
-        if(faceFinder){
-            FindFace.faceSquare(mat);
+        if (faceFinder) {
+            FindFace.squareFace(mat);
         }
 
         isBrightness = true;
